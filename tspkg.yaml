@@ -1,0 +1,25 @@
+name: grpc-helloworld
+version: __from_changelog__
+
+deps:
+  gRPC: any
+
+definitions:
+  - flavor:
+      os: ubuntu-xenial
+    deps:
+      cmake: any
+  - flavor:
+      os: ubuntu-focal
+    extra_deps:
+      apt: build-essential autoconf libtool pkg-config cmake
+
+build: |
+  [[ -n $CLEANUP ]] && rm -r build
+  mkdir -p cmake/build
+  pushd cmake/build
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ../../
+    make -j$(nproc)
+    make install
+  popd
+
